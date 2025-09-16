@@ -1,0 +1,11 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+    <h1>Welcome to Your Personalized Learning Journey</h1>
+    <p>Discover courses, track your progress, and get tailored recommendations.</p>
+    {% if not user.is_authenticated %}
+        <p>Ready to start? <a href="{% url 'register' %}">Sign up now!</a></p>
+    {% endif %}
+{% endblock %}

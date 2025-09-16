@@ -1,0 +1,22 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}{{ quiz.title }}{% endblock %}
+
+{% block content %}
+    <h2>{{ quiz.title }}</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        {% for question in quiz.question_set.all %}
+            <div class="question">
+                <h4>{{ question.text }}</h4>
+                {% for answer in question.answer_set.all %}
+                    <label>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}">
+                        {{ answer.text }}
+                    </label><br>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <button type="submit">Submit Quiz</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+    <h2>Your Learning Dashboard</h2>
+    <p>Explore the courses below to start learning.</p>
+
+    <div class="course-list">
+        {% for course in courses %}
+            <div class="course-item">
+                <h3>{{ course.title }}</h3>
+                <p>{{ course.description }}</p>
+                <a href="#">View Course</a> 
+                </div>
+        {% empty %}
+            <p>No courses are available yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
