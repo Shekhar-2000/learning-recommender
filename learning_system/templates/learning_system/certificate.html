@@ -1,0 +1,60 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Certificate - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="certificate-container">
+    <div class="certificate">
+        <div class="certificate-header">
+            <h1><i class="fas fa-certificate"></i> Certificate of Completion</h1>
+        </div>
+        
+        <div class="certificate-body">
+            <p class="certificate-text">This is to certify that</p>
+            <h2 class="student-name">{{ student.user.get_full_name|default:student.user.username }}</h2>
+            <p class="certificate-text">has successfully completed the course</p>
+            <h3 class="course-name">{{ course.title }}</h3>
+            <p class="certificate-date">on {{ completion.completed_at|date:"F d, Y" }}</p>
+            
+            {% if completion.certificate_id %}
+                <p class="certificate-id">Certificate ID: {{ completion.certificate_id }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="certificate-footer">
+            <div class="certificate-seal">
+                <i class="fas fa-stamp"></i>
+            </div>
+            <p>LearnSmart Learning Platform</p>
+        </div>
+    </div>
+    
+    <div class="certificate-actions">
+        <button onclick="window.print()" class="btn btn-primary">
+            <i class="fas fa-print"></i> Print Certificate
+        </button>
+        <a href="{% url 'course_detail' course.id %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+    </div>
+</div>
+
+<style>
+@media print {
+    .certificate-actions, .navbar, .footer {
+        display: none;
+    }
+    .certificate {
+        border: 5px solid #gold;
+        padding: 40px;
+    }
+}
+</style>
+{% endblock %}
+
+
+
+
+
+
+

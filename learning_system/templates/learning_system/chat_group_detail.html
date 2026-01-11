@@ -1,0 +1,65 @@
+{% extends 'learning_system/base.html' %}
+
+
+{% block title %}{{ group.name }} - Chat Group{% endblock %}
+
+{% block content %}
+<div class="chat-group-container">
+    <div class="chat-group-header">
+        <h2><i class="fas fa-users"></i> {{ group.name }}</h2>
+        <p class="group-meta">
+            <i class="fas fa-calendar"></i> Created: {{ group.created_at|date:"F d, Y" }}
+        </p>
+    </div>
+
+    <div class="group-members-section">
+        <h3><i class="fas fa-user-friends"></i> Members ({{ group.members.count }})</h3>
+        <div class="members-list">
+            {% for member in group.members.all %}
+                <span class="member-badge">
+                    <i class="fas fa-user"></i> {{ member.username }}
+                </span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="messages-section">
+        <h3><i class="fas fa-comments"></i> Messages</h3>
+        <div class="messages-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="message-item">
+                        <div class="message-header">
+                            <strong><i class="fas fa-user"></i> {{ message.sender.username }}</strong>
+                            <span class="message-time">
+                                <i class="fas fa-clock"></i> {{ message.timestamp|date:"M d, Y H:i" }}
+                            </span>
+                        </div>
+                        <div class="message-content">
+                            {{ message.message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="no-messages">No messages yet. Be the first to send a message!</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="chat-actions">
+        <a href="{% url 'create_chat_group' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Create Group
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">
+            <i class="fas fa-home"></i> Go to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

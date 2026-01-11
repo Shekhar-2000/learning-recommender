@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Personalized Learning System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>LearnSmart</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="{% url 'home' %}" class="nav-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                
+                {% if user.is_authenticated %}
+                    {% if user.is_teacher %}
+                        <a href="{% url 'teacher_dashboard' %}" class="nav-link">
+                            <i class="fas fa-chalkboard-teacher"></i> Teacher Dashboard
+                        </a>
+                    {% else %}
+                        <a href="{% url 'dashboard' %}" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i> My Dashboard
+                        </a>
+                        <a href="{% url 'my_bookmarks' %}" class="nav-link">
+                            <i class="fas fa-bookmark"></i> Bookmarks
+                        </a>
+                        <a href="{% url 'my_achievements' %}" class="nav-link">
+                            <i class="fas fa-trophy"></i> Achievements
+                        </a>
+                        <a href="{% url 'progress_analytics' %}" class="nav-link">
+                            <i class="fas fa-chart-line"></i> Analytics
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'search_courses' %}" class="nav-link">
+                        <i class="fas fa-search"></i> Search
+                    </a>
+                    <a href="{% url 'notifications' %}" class="nav-link">
+                        <i class="fas fa-bell"></i> Notifications
+                        {% if unread_notifications_count > 0 %}
+                            <span class="badge">{{ unread_notifications_count }}</span>
+                        {% endif %}
+                    </a>
+                    
+                    <div class="nav-user">
+                        <span class="welcome-text">
+                            <i class="fas fa-user"></i> Welcome, {{ user.first_name|default:user.username }}
+                        </span>
+                        <a href="{% url 'logout' %}" class="nav-link logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                    <a href="{% url 'register' %}" class="nav-link register-btn">
+                        <i class="fas fa-user-plus"></i> Register
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-info-circle"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 LearnSmart. Personalized Learning System.</p>
+        </div>
+    </footer>
+</body>
+</html>

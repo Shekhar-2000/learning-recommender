@@ -1,0 +1,105 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Create Account - LearnSmart{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header text-center">
+        <h2>
+            <i class="fas fa-user-plus"></i>
+            Join LearnSmart
+        </h2>
+        <p>Create your account and start your personalized learning journey</p>
+    </div>
+    
+    <form method="post" class="auth-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">
+                <i class="fas fa-user"></i>
+                Username
+            </label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="form-errors">
+                    {% for error in form.username.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password1.id_for_label }}">
+                <i class="fas fa-lock"></i>
+                Password
+            </label>
+            {{ form.password1 }}
+            {% if form.password1.errors %}
+                <div class="form-errors">
+                    {% for error in form.password1.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.password2.id_for_label }}">
+                <i class="fas fa-lock"></i>
+                Confirm Password
+            </label>
+            {{ form.password2 }}
+            {% if form.password2.errors %}
+                <div class="form-errors">
+                    {% for error in form.password2.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <div class="checkbox-wrapper">
+                {{ form.is_teacher }}
+                <label for="{{ form.is_teacher.id_for_label }}">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Register as a Teacher
+                </label>
+            </div>
+            {% if form.is_teacher.errors %}
+                <div class="form-errors">
+                    {% for error in form.is_teacher.errors %}
+                        <span class="error-message">{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if form.non_field_errors %}
+            <div class="form-errors">
+                {% for error in form.non_field_errors %}
+                    <span class="error-message">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary btn-full">
+                <i class="fas fa-user-plus"></i>
+                Create Account
+            </button>
+        </div>
+        
+        <div class="form-footer text-center">
+            <p>Already have an account? 
+                <a href="{% url 'login' %}" class="link-primary">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </a>
+            </p>
+        </div>
+    </form>
+</div>
+{% endblock %}

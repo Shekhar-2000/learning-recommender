@@ -1,0 +1,59 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}My Achievements{% endblock %}
+
+{% block content %}
+<div class="achievements-container">
+    <h2><i class="fas fa-trophy"></i> My Achievements</h2>
+    
+    <div class="achievements-stats">
+        <div class="stat-card">
+            <h3>{{ earned_count }}</h3>
+            <p>Earned</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ total_count }}</h3>
+            <p>Total Available</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ completion_percentage }}%</h3>
+            <p>Completion</p>
+        </div>
+    </div>
+    
+    <h3>Earned Achievements</h3>
+    <div class="achievements-grid">
+        {% for student_achievement in earned_achievements %}
+            <div class="achievement-card earned">
+                <div class="achievement-icon">
+                    <i class="{{ student_achievement.achievement.icon }}"></i>
+                </div>
+                <h4>{{ student_achievement.achievement.name }}</h4>
+                <p>{{ student_achievement.achievement.description }}</p>
+                <div class="achievement-date">
+                    Earned: {{ student_achievement.earned_at|date:"M d, Y" }}
+                </div>
+            </div>
+        {% empty %}
+            <p>You haven't earned any achievements yet. Keep learning!</p>
+        {% endfor %}
+    </div>
+    
+    <h3>Available Achievements</h3>
+    <div class="achievements-grid">
+        {% for achievement in all_achievements %}
+            {% if achievement.id not in earned_ids %}
+                <div class="achievement-card locked">
+                    <div class="achievement-icon">
+                        <i class="{{ achievement.icon }}"></i>
+                    </div>
+                    <h4>{{ achievement.name }}</h4>
+                    <p>{{ achievement.description }}</p>
+                    <div class="achievement-status">Locked</div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

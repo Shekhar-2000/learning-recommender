@@ -1,0 +1,78 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}{{ quiz.title }} - LearnSmart{% endblock %}
+
+{% block content %}
+<div class="quiz-header">
+    <div class="content-card">
+        <div class="quiz-info">
+            <h1>
+                <i class="fas fa-question-circle"></i>
+                {{ quiz.title }}
+            </h1>
+            <p>Answer all questions to complete this quiz. Take your time and choose the best answers.</p>
+            
+            <div class="quiz-meta">
+                <div class="meta-item">
+                    <i class="fas fa-list-ol"></i>
+                    <span>{{ questions|length }} Questions</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Estimated Time: 10-15 minutes</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="quiz-container">
+    <div class="content-card">
+        <form method="post" class="quiz-form">
+            {% csrf_token %}
+            
+            <div class="quiz-questions">
+                {% for question in questions %}
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">{{ forloop.counter }}</div>
+                            <h3>{{ question.text }}</h3>
+                        </div>
+                        
+                        <div class="answer-options">
+                            {% for answer in question.answer_set.all %}
+                                <label class="answer-option">
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}" required>
+                                    <span class="answer-text">{{ answer.text }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="quiz-actions">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-check"></i>
+                    Submit Quiz
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="quiz-help">
+    <div class="content-card">
+        <h3>
+            <i class="fas fa-lightbulb"></i>
+            Quiz Tips
+        </h3>
+        <ul class="help-list">
+            <li>Read each question carefully before selecting your answer</li>
+            <li>You can only select one answer per question</li>
+            <li>Make sure to answer all questions before submitting</li>
+            <li>Your score will be calculated based on correct answers</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

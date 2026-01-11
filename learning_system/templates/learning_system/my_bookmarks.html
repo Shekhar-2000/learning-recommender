@@ -1,0 +1,60 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}My Bookmarks{% endblock %}
+
+{% block content %}
+<div class="bookmarks-container">
+    <h2><i class="fas fa-bookmark"></i> My Bookmarked Courses</h2>
+    
+    {% if courses %}
+        <div class="courses-grid">
+            {% for course in courses %}
+                <div class="course-card">
+                    <div class="course-header">
+                        <h4><a href="{% url 'course_detail' course.id %}">{{ course.title }}</a></h4>
+                        {% if course.avg_rating > 0 %}
+                            <div class="rating">
+                                <i class="fas fa-star"></i> {{ course.avg_rating }} ({{ course.rating_count }})
+                            </div>
+                        {% endif %}
+                    </div>
+                    <p class="course-description">{{ course.description|truncatewords:30 }}</p>
+                    <div class="course-actions">
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-primary">View Course</a>
+                        <button onclick="toggleBookmark({{ course.id }})" class="btn btn-secondary">
+                            <i class="fas fa-bookmark"></i> Remove Bookmark
+                        </button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-results">You haven't bookmarked any courses yet. Start exploring and bookmark your favorites!</p>
+        <a href="{% url 'search_courses' %}" class="btn btn-primary">Browse Courses</a>
+    {% endif %}
+</div>
+
+<script>
+function toggleBookmark(courseId) {
+    fetch(`/bookmark/${courseId}/toggle/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(data.message);
+        location.reload();
+    });
+}
+</script>
+{% endblock %}
+
+
+
+
+
+
+

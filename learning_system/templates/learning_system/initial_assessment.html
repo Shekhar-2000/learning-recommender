@@ -1,0 +1,88 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Initial Assessment - LearnSmart{% endblock %}
+
+{% block content %}
+<div class="assessment-header">
+    <div class="content-card">
+        <div class="assessment-info">
+            <h1>
+                <i class="fas fa-clipboard-check"></i>
+                {{ assessment.title }}
+            </h1>
+            <p>{{ assessment.description }}</p>
+            
+            <div class="assessment-meta">
+                <div class="meta-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>{{ questions|length }} Questions</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Estimated Time: 10-15 minutes</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-target"></i>
+                    <span>Personalized Recommendations</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="assessment-container">
+    <div class="content-card">
+        <form method="post" class="assessment-form">
+            {% csrf_token %}
+            
+            <div class="assessment-questions">
+                {% for question in questions %}
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">{{ forloop.counter }}</div>
+                            <div class="question-info">
+                                <h3>{{ question.text }}</h3>
+                                <div class="question-meta">
+                                    <span class="category">{{ question.category|title }}</span>
+                                    <span class="difficulty">Level {{ question.difficulty_level }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-options">
+                            {% for answer in question.assessmentanswer_set.all %}
+                                <label class="answer-option">
+                                    <input type="radio" name="question_{{ question.id }}" value="{{ answer.id }}" required>
+                                    <span class="answer-text">{{ answer.text }}</span>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="assessment-actions">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="fas fa-check"></i>
+                    Complete Assessment
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="assessment-help">
+    <div class="content-card">
+        <h3>
+            <i class="fas fa-lightbulb"></i>
+            Assessment Instructions
+        </h3>
+        <ul class="help-list">
+            <li>Answer all questions honestly based on your current knowledge</li>
+            <li>There are no right or wrong answers - this helps us understand your learning style</li>
+            <li>Take your time to think through each question</li>
+            <li>Your responses will help us recommend the best courses for you</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

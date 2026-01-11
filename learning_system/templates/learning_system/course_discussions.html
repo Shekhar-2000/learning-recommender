@@ -1,0 +1,54 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Discussions - {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="discussions-container">
+    <h2><i class="fas fa-comments"></i> Discussions: {{ course.title }}</h2>
+    
+    <div class="create-discussion">
+        <h3>Start a New Discussion</h3>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Discussion title" required class="form-input">
+            <textarea name="content" placeholder="Your question or topic..." rows="5" required class="form-textarea"></textarea>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Create Discussion
+            </button>
+        </form>
+    </div>
+    
+    <div class="discussions-list">
+        <h3>All Discussions</h3>
+        {% for discussion in discussions %}
+            <div class="discussion-card">
+                <div class="discussion-header">
+                    <h4>
+                        <a href="{% url 'discussion_detail' discussion.id %}">{{ discussion.title }}</a>
+                        {% if discussion.is_pinned %}
+                            <span class="pinned-badge"><i class="fas fa-thumbtack"></i> Pinned</span>
+                        {% endif %}
+                    </h4>
+                    <span class="discussion-meta">
+                        by {{ discussion.author.username }} • {{ discussion.created_at|timesince }} ago
+                    </span>
+                </div>
+                <p class="discussion-preview">{{ discussion.content|truncatewords:30 }}</p>
+                <div class="discussion-footer">
+                    <span><i class="fas fa-comments"></i> {{ discussion.replies.count }} replies</span>
+                    <a href="{% url 'discussion_detail' discussion.id %}" class="btn btn-sm">View Discussion</a>
+                </div>
+            </div>
+        {% empty %}
+            <p class="no-discussions">No discussions yet. Be the first to start one!</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

@@ -1,0 +1,110 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}{{ course.title }} - LearnSmart{% endblock %}
+
+{% block content %}
+<div class="course-header">
+    <div class="content-card">
+        <div class="course-info">
+            <div class="course-title-section">
+                <h1>
+                    <i class="fas fa-graduation-cap"></i>
+                    {{ course.title }}
+                </h1>
+                {% if course.tags %}
+                    <div class="course-tags">
+                        <span class="tag">{{ course.tags }}</span>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="course-description">
+                <p>{{ course.description }}</p>
+            </div>
+            
+            <div class="course-meta">
+                <div class="meta-item">
+                    <i class="fas fa-book"></i>
+                    <span>{{ course.lesson_set.count }} Lessons</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>{{ course.lesson_set.all|length }} Quizzes</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Estimated Time: 2-3 hours</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lessons-section">
+    <div class="content-card">
+        <div class="section-header">
+            <h2>
+                <i class="fas fa-list-ul"></i>
+                Course Content
+            </h2>
+            <p>Work through the lessons and quizzes to complete this course.</p>
+        </div>
+
+        {% if course.lesson_set.all %}
+            <div class="lessons-list">
+                {% for lesson in course.lesson_set.all %}
+                    <div class="lesson-card">
+                        <div class="lesson-header">
+                            <div class="lesson-number">{{ forloop.counter }}</div>
+                            <div class="lesson-info">
+                                <h3>{{ lesson.title }}</h3>
+                                <p>{{ lesson.content|truncatewords:25 }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="lesson-actions">
+                            {% if lesson.quiz_set.first %}
+                                <a href="{% url 'quiz_detail' lesson.quiz_set.first.id %}" class="btn btn-primary">
+                                    <i class="fas fa-play"></i>
+                                    Take Quiz
+                                </a>
+                            {% else %}
+                                <span class="btn btn-secondary disabled">
+                                    <i class="fas fa-lock"></i>
+                                    No Quiz Available
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h3>No Lessons Available</h3>
+                <p>This course doesn't have any lessons yet. Check back later for content!</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="course-actions">
+    <div class="content-card">
+        <div class="actions-row">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+            
+            {% if course.lesson_set.first %}
+                <a href="{% url 'quiz_detail' course.lesson_set.first.quiz_set.first.id %}" class="btn btn-primary">
+                    <i class="fas fa-play"></i>
+                    Start First Quiz
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

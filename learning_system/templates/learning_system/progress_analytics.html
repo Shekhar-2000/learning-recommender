@@ -1,0 +1,95 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Progress Analytics{% endblock %}
+
+{% block content %}
+<div class="analytics-container">
+    <h2><i class="fas fa-chart-line"></i> Learning Progress Analytics</h2>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <h3>{{ total_quizzes }}</h3>
+            <p>Total Quizzes</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ avg_score }}%</h3>
+            <p>Average Score</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ total_time_hours }}h</h3>
+            <p>Total Learning Time</p>
+        </div>
+        <div class="stat-card">
+            <h3>{{ completed_courses }}</h3>
+            <p>Completed Courses</p>
+        </div>
+    </div>
+    
+    <div class="chart-section">
+        <h3>Quiz Performance Over Time</h3>
+        <canvas id="performanceChart" width="400" height="200"></canvas>
+    </div>
+    
+    <div class="recent-quizzes">
+        <h3>Recent Quiz Attempts</h3>
+        <table class="quiz-table">
+            <thead>
+                <tr>
+                    <th>Quiz</th>
+                    <th>Score</th>
+                    <th>Time Spent</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for qp in quiz_performances %}
+                    <tr>
+                        <td>{{ qp.quiz.title }}</td>
+                        <td>{{ qp.score }}%</td>
+                        <td>{{ qp.time_spent_seconds }}s</td>
+                        <td>{{ qp.timestamp|date:"M d, Y" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4">No quiz attempts yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const scoreData = {{ score_data|safe }};
+const ctx = document.getElementById('performanceChart').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: scoreData.map(d => d.date),
+        datasets: [{
+            label: 'Quiz Score (%)',
+            data: scoreData.map(d => d.score),
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100
+            }
+        }
+    }
+});
+</script>
+{% endblock %}
+
+
+
+
+
+
+

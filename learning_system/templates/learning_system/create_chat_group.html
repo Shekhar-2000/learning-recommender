@@ -1,0 +1,12 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}Create Chat Group{% endblock %}
+
+{% block content %}
+<h2>Create a New Chat Group</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create Group</button>
+</form>
+{% endblock %}

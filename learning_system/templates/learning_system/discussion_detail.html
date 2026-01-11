@@ -1,0 +1,58 @@
+{% extends 'learning_system/base.html' %}
+
+{% block title %}{{ discussion.title }}{% endblock %}
+
+{% block content %}
+<div class="discussion-detail-container">
+    <div class="discussion-header">
+        <h2>{{ discussion.title }}</h2>
+        <div class="discussion-meta">
+            <span>by {{ discussion.author.username }}</span>
+            <span>{{ discussion.created_at|date:"F d, Y" }}</span>
+            <a href="{% url 'course_detail' discussion.course.id %}" class="btn btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+        </div>
+    </div>
+    
+    <div class="discussion-content">
+        <p>{{ discussion.content|linebreaks }}</p>
+    </div>
+    
+    <div class="replies-section">
+        <h3><i class="fas fa-comments"></i> Replies ({{ replies.count }})</h3>
+        
+        {% for reply in replies %}
+            <div class="reply-card">
+                <div class="reply-header">
+                    <strong>{{ reply.author.username }}</strong>
+                    <span class="reply-time">{{ reply.created_at|timesince }} ago</span>
+                </div>
+                <div class="reply-content">
+                    {{ reply.content|linebreaks }}
+                </div>
+            </div>
+        {% empty %}
+            <p class="no-replies">No replies yet. Be the first to reply!</p>
+        {% endfor %}
+        
+        <div class="reply-form">
+            <h4>Add a Reply</h4>
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="content" placeholder="Your reply..." rows="4" required class="form-textarea"></textarea>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Post Reply
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+

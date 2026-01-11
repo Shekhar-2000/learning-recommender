@@ -1,0 +1,83 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1>All Users</h1>
+
+  <div class="dashboard-kpis" style="display:flex;gap:1rem;margin-bottom:1rem;">
+    <div class="kpi" style="padding:0.5rem;border:1px solid #ddd;background:#fff;">
+      <strong>Total users</strong>
+      <div>{{ total_users }}</div>
+    </div>
+    <div class="kpi" style="padding:0.5rem;border:1px solid #ddd;background:#fff;">
+      <strong>Students</strong>
+      <div>{{ total_students }}</div>
+    </div>
+    <div class="kpi" style="padding:0.5rem;border:1px solid #ddd;background:#fff;">
+      <strong>Teachers</strong>
+      <div>{{ total_teachers }}</div>
+    </div>
+    <div class="kpi" style="padding:0.5rem;border:1px solid #ddd;background:#fff;">
+      <strong>Active</strong>
+      <div>{{ total_active }}</div>
+    </div>
+  </div>
+
+  <form method="get" style="margin-bottom:1rem;display:flex;gap:0.5rem;align-items:center;">
+    <input type="text" name="q" placeholder="Search username or email" value="{{ search_q }}" />
+    <select name="role">
+      <option value="">All roles</option>
+      <option value="student" {% if filter_role == 'student' %}selected{% endif %}>Students</option>
+      <option value="teacher" {% if filter_role == 'teacher' %}selected{% endif %}>Teachers</option>
+      <option value="staff" {% if filter_role == 'staff' %}selected{% endif %}>Staff</option>
+      <option value="superuser" {% if filter_role == 'superuser' %}selected{% endif %}>Superusers</option>
+      <option value="active" {% if filter_role == 'active' %}selected{% endif %}>Active</option>
+    </select>
+    <button type="submit" class="default">Search</button>
+    <a class="button" href="?{% if search_q %}q={{ search_q }}&{% endif %}{% if filter_role %}role={{ filter_role }}&{% endif %}export=csv">Export CSV</a>
+  </form>
+
+  <p>Showing {{ users_page.paginator.count }} users (page {{ users_page.number }}).</p>
+
+  <table class="adminlist">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Is staff</th>
+        <th>Is superuser</th>
+        <th>Is student</th>
+        <th>Is teacher</th>
+        <th>Date joined</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for user in users_page.object_list %}
+      <tr class="row1">
+        <td>{{ user.id }}</td>
+        <td><a href="{% url 'admin:learning_system_customuser_change' user.id %}">{{ user.username }}</a></td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.is_staff }}</td>
+        <td>{{ user.is_superuser }}</td>
+        <td>{{ user.is_student }}</td>
+        <td>{{ user.is_teacher }}</td>
+        <td>{{ user.date_joined }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="8">No users found.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="paginator">
+    {% if users_page.has_previous %}
+      <a href="?page={{ users_page.previous_page_number }}">previous</a>
+    {% endif %}
+    <span>Page {{ users_page.number }} of {{ users_page.paginator.num_pages }}</span>
+    {% if users_page.has_next %}
+      <a href="?page={{ users_page.next_page_number }}">next</a>
+    {% endif %}
+  </div>
+
+  <p><a href="{% url 'admin:learning_system_customuser_changelist' %}">Open Users change list in admin</a></p>
+{% endblock %}
